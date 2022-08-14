@@ -1,0 +1,20 @@
+.placeholder{
+    height: 50px;
+}
+table{
+    width:100%;
+}
+tbody{
+    margin: 20px 0;
+    height: 700px;
+    overflow-y: scroll;
+    display: block;
+}
+.concatinated-values-wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 0;
+}
+.concatinated-value{
+    width:33.33%
+}
