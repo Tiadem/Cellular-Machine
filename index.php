@@ -101,7 +101,13 @@ $values = implode(', ',$values);
                         <div class="input-group-prepend">
                             <button type="submit" class="input-group-text" id="inputGroup-sizing-sm">Wzór</button>
                         </div>
-                        <input type="text" class="form-control" name="pattern" value="<?php echo $pattern ?>" placeholder="np. 1x^2+1%37 " aria-label="Wzór" aria-describedby="inputGroup-sizing-sm">
+                        <input type="text" class="form-control" name="pattern" value="<?php echo $pattern; ?>" placeholder="np. 1x^2+1%37 " aria-label="Wzór" aria-describedby="inputGroup-sizing-sm">
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <button type="submit" class="input-group-text" id="inputGroup-sizing-sm">Przedział czasowy</button>
+                        </div>
+                        <input type="text" class="form-control" name="timeLimit" value="<?php echo $timeLimit; ?>" placeholder="np. 30 " aria-label="Przedział czasowy" aria-describedby="inputGroup-sizing-sm">
                     </div>
                 </form>
 
@@ -109,7 +115,7 @@ $values = implode(', ',$values);
 
                 </div>
                 <div class="col-6">
-                    <canvas id="myChart" class="max-width:500px;" width="400" height="400">
+                    <canvas id="myChart">
                     </canvas>
                 </div>
             </div>
