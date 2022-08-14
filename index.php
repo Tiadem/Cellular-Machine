@@ -115,7 +115,7 @@ $values = implode(', ',$values);
 
                 </div>
                 <div class="col-6">
-                    <canvas id="myChart">
+                    <canvas id="myChart" height="300">
                     </canvas>
                 </div>
             </div>
