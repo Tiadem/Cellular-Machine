@@ -4,6 +4,12 @@
 class CellularMachinePatternTransformer{
 
     private const REGEXP = ['/([\-\+]?\d+x\^\d*)/','/\%(\d+)/','/([\+\-]\d+)\%/'];
+    private const SUPPORTED_POLYNOMIAL_OPERATORS = ['-','+'];
+
+    private const POWER_OPERATOR_PLACEHOLDER = '^';
+    private const SUPPORTED_UNKNOWN_PLACEHOLDER = 'x';
+
+    private const EMPTY_VALUE = '';
 
     private int $modulo;
 
@@ -27,10 +33,17 @@ class CellularMachinePatternTransformer{
 
         $polynomialPositions = array_map(function(string $position){
 
-            [$rest,$power] = explode('^',$position);
-            $rest = str_replace('x','',$rest);
-            $sign = !(str_starts_with($rest, '-'));
-            $countUnknown = str_replace(['-','+'],['',''],$rest);
+            [$rest,$power] = explode(self::POWER_OPERATOR_PLACEHOLDER,$position);
+            $rest = str_replace(self::SUPPORTED_UNKNOWN_PLACEHOLDER,self::EMPTY_VALUE,$rest);
+
+            $sign = !(str_starts_with($rest, self::SUPPORTED_POLYNOMIAL_OPERATORS[0]));
+
+            $countUnknown = str_replace(
+                self::SUPPORTED_POLYNOMIAL_OPERATORS,
+                [
+                    self::EMPTY_VALUE,
+                    self::EMPTY_VALUE
+                ],$rest);
 
             return [
                 'countUnknown' => (int) $countUnknown,
