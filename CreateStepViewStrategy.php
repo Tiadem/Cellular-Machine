@@ -1,10 +1,10 @@
 <?php
 
-class CreateViewBodyStrategy implements CreatViewBodyStrategyInterface
+class CreateStepViewStrategy implements CreateStepViewStrategyInterface
 {
 
-    public function createBody(array $bodyData): string{
-        return array_reduce($bodyData,function($carry, $rowValue){
+    public function createStepViewBody(array $bodyData): string{
+        return array_reduce($bodyData,function(array $carry, mixed $rowValue){
             $index = $carry['index'];
 
             $carry['body'].= "

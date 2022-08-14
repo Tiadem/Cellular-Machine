@@ -10,11 +10,11 @@ tbody{
     overflow-y: scroll;
     display: block;
 }
-.concatinated-values-wrapper{
+.concatenated-values-wrapper{
     display: flex;
     flex-wrap: wrap;
     padding: 10px 0;
 }
-.concatinated-value{
+.concatenated-value{
     width:33.33%
 }

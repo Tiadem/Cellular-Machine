@@ -4,6 +4,7 @@
 class CellularMachinePatternTransformer{
 
     private const REGEXP = ['/([\-\+]?\d+x\^\d*)/','/\%(\d+)/','/([\+\-]\d+)\%/'];
+
     private int $modulo;
 
     public function __construct(private int $timeLimit,private string $pattern){
@@ -16,7 +17,7 @@ class CellularMachinePatternTransformer{
     public function preparePolynomialValues(string $pattern): array{
 
         [$polynomialPositions,$modulo,$additional] = array_map(
-            fn($regexp) =>$this->extractPolynomialParts($regexp,$this->pattern)
+            fn(string $regexp) =>$this->extractPolynomialParts($regexp,$pattern)
         ,self::REGEXP);
 
         $polynomialPositions = $polynomialPositions[0];
@@ -24,7 +25,7 @@ class CellularMachinePatternTransformer{
         $additional = $additional[0][0];
 
 
-        $polynomialPositions = array_map(function($position){
+        $polynomialPositions = array_map(function(string $position){
 
             [$rest,$power] = explode('^',$position);
             $rest = str_replace('x','',$rest);
@@ -149,7 +150,7 @@ class CellularMachinePatternTransformer{
     
         $dividedValuesArray = $this->divideAndFillWithBlankValues();
 
-        return array_map(function($row){
+        return array_map(function(array $row){
             return abs(array_reduce($row,function($carry, $rowValue){
                 $carry += $rowValue != 0 ? $rowValue*log($rowValue,2) : 0;
                 return $carry;
