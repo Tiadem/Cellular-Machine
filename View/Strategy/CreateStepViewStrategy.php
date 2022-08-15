@@ -1,5 +1,7 @@
 <?php
 
+namespace View\Strategy;
+
 class CreateStepViewStrategy implements CreateStepViewStrategyInterface
 {
 
