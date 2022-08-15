@@ -1,5 +1,6 @@
 <?php
 
+namespace CellularMachine;
 
 class CellularMachinePatternTransformer{
 

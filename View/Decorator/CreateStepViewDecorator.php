@@ -1,5 +1,9 @@
 <?php
 
+namespace View\Decorator;
+
+use View\Strategy\CreateStepViewStrategyInterface;
+
 class CreateStepViewDecorator implements CreateStepViewStrategyInterface
 {
     public function __construct(private CreateStepViewStrategyInterface $strategy){}

@@ -2,6 +2,11 @@
 
 include_once 'autoload.php';
 
+use CellularMachine\CellularMachinePatternTransformer;
+use View\Builder\CellularMachineDataViewBuilder;
+use View\Strategy\CreateStepViewStrategy;
+use View\Decorator\CreateStepViewDecorator;
+
 const CELLULAR_MACHINE_TRANSFORM_STEPS = [
     'sumRowValuesWithLog',
     'divideAndFillWithBlankValues',

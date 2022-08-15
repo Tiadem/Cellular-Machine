@@ -1,5 +1,9 @@
 <?php
 
+namespace View\Builder;
+
+use CellularMachine\CellularMachinePatternTransformer;
+use View\Strategy\CreateStepViewStrategyInterface;
 
 class CellularMachineDataViewBuilder{
 
