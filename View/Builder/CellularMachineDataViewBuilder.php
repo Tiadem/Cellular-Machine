@@ -7,15 +7,22 @@ use View\Strategy\CreateStepViewStrategyInterface;
 
 class CellularMachineDataViewBuilder{
 
-    private $activeView = 'sumRowValuesWithLog';
+    private string $activeView = 'sumRowValuesWithLog';
+    private string $randomViewID;
 
     public function __construct(
         private CellularMachinePatternTransformer $transformer,
         private CreateStepViewStrategyInterface $strategy
-    ){}
+    ){
+        $this->randomViewID = uniqid();
+    }
 
     public function setStrategy(CreateStepViewStrategyInterface $strategy): self{
         $this->strategy = $strategy;
+        return $this;
+    }
+    public function changeTransformer(CellularMachinePatternTransformer $transformer): self{
+        $this->transformer = $transformer;
         return $this;
     }
 
@@ -24,8 +31,9 @@ class CellularMachineDataViewBuilder{
         return $this;
     }
 
-    private function isActiveView($currentStep): bool{
-        return $this->activeView === $currentStep;
+    public function generateRandomViewID(): self{
+        $this->randomViewID = uniqid();
+        return $this;
     }
 
     public function createNavigation(array $navigationParameters): string{
@@ -41,13 +49,13 @@ class CellularMachineDataViewBuilder{
         $navigationBody = implode(' ',$navigationElementsArray);
 
         return sprintf('
-          <ul class="nav nav-pills" id="myTab" role="tablist">
+          <ul class="nav nav-pills" role="tablist">
             %s
           </ul>
         ',$navigationBody);
     }
 
-    public function createNavigationElement(string $dataFunctionName,string $title): string{
+    public function createNavigationElement(string $stepName,string $title): string{
 
         return  sprintf('    
             <li class="nav-item" role="presentation">
@@ -63,7 +71,11 @@ class CellularMachineDataViewBuilder{
                     %2$s
                 </button>
             </li>
-            ',$dataFunctionName,$title,$this->isActiveView($dataFunctionName) ? 'active' : '');
+            ',
+            $this->getRandomStepName($stepName),
+            $title,
+            $this->isActiveView($stepName) ? 'active' : ''
+        );
     }
 
     public function createBody(array $stepViewParameters): string{
@@ -79,7 +91,7 @@ class CellularMachineDataViewBuilder{
         $body = implode(' ',$stepViewsArray);
 
         return sprintf('
-          <div class="tab-content" id="myTabContent">
+          <div class="tab-content">
             %s
           </div>
         ',$body);
@@ -94,7 +106,7 @@ class CellularMachineDataViewBuilder{
                 </table>
             </div>',
             $this->isActiveView($stepName) ? implode(' ',['show','active']) : '',
-            $stepName,
+            $this->getRandomStepName($stepName),
             $this->createStepHeader(),
             $this->strategy->createStepViewBody($this->transformer->$stepName())
         );
@@ -106,6 +118,14 @@ class CellularMachineDataViewBuilder{
             <th>Index</th>
             <th>Wartości</th>
         </tr>';
+    }
+
+    private function getRandomStepName(string $stepName): string{
+        return "$stepName-$this->randomViewID";
+    }
+
+    private function isActiveView($currentStep): bool{
+        return $this->activeView === $currentStep;
     }
 
 }

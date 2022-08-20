@@ -1,11 +1,11 @@
 
-function createEntropyChart(keys,values,maxValue,roundedValues){
+function createEntropyChart(chartElementID,chartLabel,keys,values,maxValue,roundedValues){
 
-    const ctx = document.getElementById("myChart");
+    const ctx = document.getElementById(chartElementID);
     const data = {
         labels: keys,
         datasets: [{
-            label: "Wykres entropii Shannona dla automatu komórkowego 0-wymiarowego",
+            label: chartLabel,
             function: function(x) { return x },
             borderColor: "rgba(75, 192, 192, 1)",
             data: values,
