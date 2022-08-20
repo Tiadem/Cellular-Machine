@@ -2,98 +2,31 @@
 
 namespace CellularMachine;
 
-class CellularMachinePatternTransformer{
+use CellularMachine\EquationPattern\EquationPatternResolverInterface;
 
-    private const REGEXP = ['/([\-\+]?\d+x\^\d*)/','/\%(\d+)/','/([\+\-]\d+)\%/'];
-    private const SUPPORTED_POLYNOMIAL_OPERATORS = ['-','+'];
-
-    private const POWER_OPERATOR_PLACEHOLDER = '^';
-    private const SUPPORTED_UNKNOWN_PLACEHOLDER = 'x';
-
-    private const EMPTY_VALUE = '';
+final class CellularMachinePatternTransformer{
 
     private int $modulo;
 
-    public function __construct(private int $timeLimit,private string $pattern){
+    public function __construct(private int $timeLimit,private EquationPatternResolverInterface $patternResolver){
 
-        ['modulo' => $modulo] = $this->preparePolynomialValues($pattern);
-        $this->modulo = $modulo;
+        $this->modulo = $this->patternResolver->provideModulo();
 
     }
-    
-    public function preparePolynomialValues(string $pattern): array{
 
-        [$polynomialPositions,$modulo,$additional] = array_map(
-            fn(string $regexp) =>$this->extractPolynomialParts($regexp,$pattern)
-        ,self::REGEXP);
+    public function setEquationPatternResolver(EquationPatternResolverInterface $patternResolver): self{
 
-        $polynomialPositions = $polynomialPositions[0];
-        $modulo = $modulo[0][0];
-        $additional = $additional[0][0];
+        $this->patternResolver = $patternResolver;
+        $this->modulo = $patternResolver->provideModulo();
 
-
-        $polynomialPositions = array_map(function(string $position){
-
-            [$rest,$power] = explode(self::POWER_OPERATOR_PLACEHOLDER,$position);
-            $rest = str_replace(self::SUPPORTED_UNKNOWN_PLACEHOLDER,self::EMPTY_VALUE,$rest);
-
-            $sign = !(str_starts_with($rest, self::SUPPORTED_POLYNOMIAL_OPERATORS[0]));
-
-            $countUnknown = str_replace(
-                self::SUPPORTED_POLYNOMIAL_OPERATORS,
-                [
-                    self::EMPTY_VALUE,
-                    self::EMPTY_VALUE
-                ],$rest);
-
-            return [
-                'countUnknown' => (int) $countUnknown,
-                'power' => (int) $power,
-                'sign' => $sign
-            ];
-            
-        },$polynomialPositions);
- 
-       
-        return [
-            'polynomialPositions' => $polynomialPositions,
-            'additional' => (int) $additional,
-            'modulo' => $modulo
-        ];
-        
-    }
-
-    private function extractPolynomialParts(string $regexp,string $pattern): array{
-
-        preg_match_all($regexp, $pattern, $matches);
-        array_shift($matches);
-
-        return array_values($matches);
-    }
-
-    private function resolvePolynomialValue(int $unknownValue,array $polynomialParts): int{
-
-        $polynomialPositionsValue = array_reduce($polynomialParts['polynomialPositions'],function($carry, $position) use ($unknownValue){
-            [
-                'countUnknown' =>  $countUnknown,
-                'power' => $power,
-                'sign' => $sign
-            ] = $position;
-            $positionValue = $countUnknown*pow($unknownValue,$power);
-            $sign ? $carry+= $positionValue : $carry-=$positionValue;
-      
-            return $carry;
-        },0);
-
-        return ($polynomialPositionsValue + $polynomialParts['additional']) % $polynomialParts['modulo'];
+        return $this;
     }
 
     public function mapRecursivePolynomialValuesInTime(int &$iteration,int $previousValue,array &$values): void{
 	
         $values[] = $previousValue;
 
-        $pattern = $this->preparePolynomialValues($this->pattern);
-        $currentValue = $this->resolvePolynomialValue($previousValue,$pattern);
+        $currentValue = $this->patternResolver->resolvePolynomialValue($previousValue);
 
         if($iteration >= $this->timeLimit) return;
         $iteration++;
