@@ -20,7 +20,7 @@ Following process assumes Git and required PHP version are installed and configu
 
 Download and unpack ZIP file in destination directory or open terminal and paste:
 ```
-https://github.com/Tiadem/Cellular-Machine.git
+git clone https://github.com/Tiadem/Cellular-Machine.git
 ```
 Head to the project root directory and launch PHP Server:
 ```

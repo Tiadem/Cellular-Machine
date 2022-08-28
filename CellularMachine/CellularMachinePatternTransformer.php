@@ -32,20 +32,21 @@ final class CellularMachinePatternTransformer{
         $iteration++;
 
         $this->mapRecursivePolynomialValuesInTime($iteration,$currentValue,$values);
-        
-      
+
     }
     
     public function mapRecursivePolynomialValuesByModulo(): array{
-    
-        $all = [];
-        for($i=0;$i < $this->modulo;$i++){
+
+        $mappedValues = array_fill(0,$this->modulo,0);
+
+        array_walk($mappedValues,function(int &$iteration,int $moduloKey){
             $values = [];
-            $iteration = 0;
-            $this->mapRecursivePolynomialValuesInTime($iteration,$i,$values);
-            $all[] = $values;
-        }
-        return $all;
+            $this->mapRecursivePolynomialValuesInTime($iteration,$moduloKey,$values);
+            $iteration = $values;
+        });
+
+        return $mappedValues;
+
     }
     
     public function inverseRows(): array{
@@ -62,35 +63,20 @@ final class CellularMachinePatternTransformer{
     }
     
     public function countDifferentValues(): array{
-
-        $inverseRows = $this->inverseRows();
-    
-        $formattedArray = [];
-        foreach($inverseRows as $row){
-            $formattedArray[] = array_count_values($row);
-        }
-
-        return $formattedArray;
-    
+        return array_map(fn (array $row) =>  array_count_values($row),$this->inverseRows());
     }
+
     public function divideAndFillWithBlankValues(): array{
-    
-        $differentValues = $this->countDifferentValues();
-    
-        $dividedValuesArray = [];
-    
-        foreach($differentValues as $row){
+
+        return array_map(function(array $row){
             $dividedValuesRow = [];
             ksort($row);
             for($i = 0;$i < $this->modulo;$i++){
                 $dividedValuesRow[] = array_key_exists($i,$row) ? $row[$i]/$this->modulo : 0;
             }
-            $dividedValuesArray[] = $dividedValuesRow;
-      
-        }
+            return $dividedValuesRow;
+        },$this->countDifferentValues());
 
-        return $dividedValuesArray;
-    
     }
     
     public function sumRowValuesWithLog(): array{

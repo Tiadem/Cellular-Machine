@@ -12,18 +12,20 @@ class UlamEquationPatternResolver extends AbstractEquationPatternResolver
         self::EVEN => '1x^1/2',
         self::ODD => '3x^1+1'
     ];
-    private $mappedPatterns = [
+    private array $mappedPatterns = [
         self::EVEN => [],
         self::ODD => []
     ];
     public function __construct(private int $modulo){
 
-        $this->mappedPatterns[self::EVEN] =  $this->preparePolynomialValues(
-            sprintf(self::FULL_PATTERN_TEMPLATE, self::ULAM_FUNCTION[self::EVEN],$modulo)
-        );
+        $this->setMappedPattern(self::EVEN,$modulo);
+        $this->setMappedPattern(self::ODD,$modulo);
 
-        $this->mappedPatterns[self::ODD] =  $this->preparePolynomialValues(
-            sprintf(self::FULL_PATTERN_TEMPLATE,self::ULAM_FUNCTION[self::ODD],$modulo)
+    }
+
+    private function setMappedPattern(string $parity,int $modulo): void{
+        $this->mappedPatterns[$parity] =  $this->preparePolynomialValues(
+            sprintf(self::FULL_PATTERN_TEMPLATE,self::ULAM_FUNCTION[$parity],$modulo)
         );
     }
 
