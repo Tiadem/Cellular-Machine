@@ -61,6 +61,6 @@ Form accepts following inputs:
 2. Time span
 3. Modulo for Ulam function
 
-
+## Contributors - Julia Reterska, Krzysztof Szkopiak
 
 
